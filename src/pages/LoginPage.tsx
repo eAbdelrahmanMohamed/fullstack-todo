@@ -1,0 +1,98 @@
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import React from "react";
+
+import Joi from "joi";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/authSlice";
+import { Link } from "react-router-dom"; // Import the Link component
+import { AppDispatch } from "../redux/store"; // Import AppDispatch
+
+// Define types for the form values
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+const schema = Joi.object({
+  email: Joi.string().email({ tlds: { allow: false } }).required().messages({
+    "string.base": "Email is required",
+    "string.email": "Invalid email address",
+  }),
+  password: Joi.string().min(6).required().messages({
+    "string.base": "Password is required",
+    "string.min": "Password must be at least 6 characters",
+  }),
+});
+
+// Define the validation function
+const validate = (values: LoginFormValues) => {
+  const errors: Partial<LoginFormValues> = {};
+
+  const { error: emailError } = schema.extract("email").validate(values.email);
+  if (emailError) errors.email = emailError.details[0].message;
+
+  const { error: passwordError } = schema.extract("password").validate(values.password);
+  if (passwordError) errors.password = passwordError.details[0].message;
+
+  return errors;
+};
+
+const LoginPage = () => {
+  const dispatch = useDispatch<AppDispatch>(); // Type the dispatch here
+  const navigate = useNavigate();
+
+  return (
+    <div className="flex justify-center items-center h-screen bg-gray-200">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+        <h2 className="text-xl font-bold mb-4 text-center">Login</h2>
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validate={validate}
+          onSubmit={async (values: LoginFormValues, { setSubmitting, setErrors }) => {
+            try {
+              // unwrap() to handle errors
+              await dispatch(login(values)).unwrap(); 
+              navigate("/landing"); 
+            } catch (errMessage: any) {  // Type the error message
+              setErrors({ email: errMessage, password: errMessage }); 
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+        >
+          {() => (
+            <Form className="flex flex-col">
+              <Field
+                type="email"
+                name="email"
+                placeholder="Email"
+                className="p-2 border rounded mb-2"
+              />
+              <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+
+              <Field
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="p-2 border rounded mb-2"
+              />
+              <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
+
+              <button type="submit" className="bg-blue-500 text-white p-2 rounded mt-2">
+                Login
+              </button>
+
+              {/* Register Link */}
+              <div className="mt-4 text-center">
+                <p>Don't have an account? <Link to="/register" className="text-blue-500">Register here</Link></p>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
