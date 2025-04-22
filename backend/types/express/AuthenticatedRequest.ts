@@ -1,11 +1,18 @@
-// types/AuthenticatedRequest.ts
 import { Request } from "express";
+import { IUser } from "../../models/User";
 
 export interface AuthenticatedUser {
-  _id: string;
+  id: string;
   email: string;
+  // Add more properties if needed
 }
 
 export interface AuthenticatedRequest extends Request {
-  user: AuthenticatedUser;
+//   user: AuthenticatedUser;
 }
+
+declare module "express-serve-static-core" {
+    interface Request {
+     user?: IUser
+    }
+  }

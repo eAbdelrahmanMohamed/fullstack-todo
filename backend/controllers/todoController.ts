@@ -9,9 +9,9 @@ import {
 
 
 
-export const getTodos = async (req: AuthenticatedRequest, res: Response) => {
+export const getTodos = async (req: Request, res: Response) => {
   try {
-    const todos = await Todo.find({ userId: req.user.email });
+    const todos = await Todo.find({ userId: req.user?.email });
     res.json(todos);
   } catch (err) {
     console.error("Error fetching todos:", err);
@@ -24,7 +24,7 @@ export const createTodo = async (req: AuthenticatedRequest, res: Response)  => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   try {
-    const newTodo = await Todo.create({ ...req.body, userId: req.user.email });
+    const newTodo = await Todo.create({ ...req.body, userId: req.user?.email });
     res.status(201).json(newTodo);
   } catch (err) {
     console.error("Error creating todo:", err);
@@ -40,7 +40,7 @@ export const updateTodo = async (req: AuthenticatedRequest, res: Response) => {
     const todo = await Todo.findById(req.params.id);
     if (!todo) return res.status(404).json({ message: "Todo not found" });
 
-    if (todo.userId !== req.user.email) {
+    if (todo.userId !== req.user?.email) {
       return res.status(403).json({ message: "Unauthorized access" });
     }
 
@@ -66,7 +66,7 @@ export const toggleTodo = async (req: AuthenticatedRequest, res: Response) => {
       return res.status(404).json({ message: "Todo not found" });
     }
 
-    if (todo.userId !== req.user.email) {
+    if (todo.userId !== req.user?.email) {
       return res.status(403).json({ message: "Unauthorized access" });
     }
 
@@ -87,7 +87,7 @@ export const deleteTodo = async (req: AuthenticatedRequest, res: Response) => {
     const todo = await Todo.findById(req.params.id);
     if (!todo) return res.status(404).json({ message: "Todo not found" });
 
-    if (todo.userId !== req.user.email) {
+    if (todo.userId !== req.user?.email) {
       return res.status(403).json({ message: "Unauthorized access" });
     }
 

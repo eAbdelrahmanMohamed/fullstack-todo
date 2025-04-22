@@ -8,10 +8,10 @@
     "types": ["node", "express"],
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "typeRoots": ["./node_modules/@types", "./types"],
+    "typeRoots": ["./node_modules/@types", "./types/express"],
     "skipLibCheck": true
   },
-  "include": ["**/*.ts", "middleware/auth.ts"]
+  "include": ["**/*.ts"]
 }
 
 
