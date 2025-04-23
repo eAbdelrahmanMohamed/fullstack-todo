@@ -1,18 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "esnext",
+    "target": "es5",
     "jsx": "react-jsx",
-    "moduleResolution": "node",
     "esModuleInterop": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "strict": true,
-    "baseUrl": "./",
+    "baseUrl": "./src", 
     "paths": {
       "@redux/*": ["redux/*"],
+      "@main/*": ["main/*"],
       "@pages/*": ["pages/*"]
     },
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["./src/**/*"]
 }

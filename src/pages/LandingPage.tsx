@@ -19,6 +19,11 @@ const schema = Joi.object({
     "string.min": "Todo should be at least 1 character",
   }),
 });
+type Todo = {
+  _id: string;
+  text: string;
+  completed: boolean;
+};
 
 const LandingPage = () => {
   const [isEditing, setIsEditing] = useState<string | null>(null);
@@ -27,9 +32,14 @@ const LandingPage = () => {
   const dispatch = useDispatch<AppDispatch>(); // Type the dispatch here
   const navigate = useNavigate();
 
+  const state = useSelector((state: any) => state) ;
   const user = useSelector((state: any) => state.auth.email) || JSON.parse(localStorage.getItem("user")!);
   const token = localStorage.getItem("token");
-  const todos = useSelector((state: any) => (user ? state.todos[user] || [] : [])); // Fetch todos by user
+  const todos:Todo[] = useSelector((state: any) => (user ? state.todos[user] || [] : [])); // Fetch todos by user
+console.log("state");
+console.log(state);
+console.log("user");
+console.log(user);
 
   useEffect(() => {
     if (!user && !token) {
@@ -55,7 +65,7 @@ const LandingPage = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">To-Do List</h2>
         <button onClick={handleLogout} className="bg-red-500 text-white p-2 rounded">
-          Logout ({user?.email})
+          Logout ({user})
         </button>
       </div>
 
@@ -66,6 +76,8 @@ const LandingPage = () => {
           const errors: { text?: string } = {};
           if (error) {
             error.details.forEach((detail) => {
+              const errors: { [key: string]: string } = {};
+
               errors[detail.path[0]] = detail.message;
             });
           }
@@ -98,7 +110,7 @@ const LandingPage = () => {
       </Formik>
 
       <ul className="mt-4">
-        {todos.map((todo) => (
+        {todos.map((todo:Todo) => (
           <li key={todo._id} className="flex items-center justify-between p-2 border-b">
             <div className="flex items-center justify-between p-2 w-full">
               {isEditing === todo._id ? (
