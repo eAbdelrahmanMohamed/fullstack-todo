@@ -13,6 +13,13 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Joi from "joi";
 import { AppDispatch } from "../redux/store"; // Import AppDispatch
 
+type Todo = {
+  _id: string;
+  text: string;
+  completed: boolean;
+};
+
+
 const schema = Joi.object({
   text: Joi.string().min(1).required().messages({
     "string.empty": "Todo cannot be empty",
@@ -29,7 +36,7 @@ const LandingPage = () => {
 
   const user = useSelector((state: any) => state.auth.email) || JSON.parse(localStorage.getItem("user")!);
   const token = localStorage.getItem("token");
-  const todos = useSelector((state: any) => (user ? state.todos[user] || [] : [])); // Fetch todos by user
+  const todos :Todo[] = useSelector((state: any) => (user ? state.todos[user] || [] : [])); // Fetch todos by user
 
   useEffect(() => {
     if (!user && !token) {
@@ -66,6 +73,7 @@ const LandingPage = () => {
           const errors: { text?: string } = {};
           if (error) {
             error.details.forEach((detail) => {
+              const errors: { [key: string]: string } = {};
               errors[detail.path[0]] = detail.message;
             });
           }
@@ -98,7 +106,7 @@ const LandingPage = () => {
       </Formik>
 
       <ul className="mt-4">
-        {todos.map((todo) => (
+        {todos.map((todo :Todo) => (
           <li key={todo._id} className="flex items-center justify-between p-2 border-b">
             <div className="flex items-center justify-between p-2 w-full">
               {isEditing === todo._id ? (

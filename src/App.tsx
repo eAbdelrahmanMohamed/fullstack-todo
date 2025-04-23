@@ -5,7 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import LandingPage from "./pages/LandingPage";
 import { useSelector } from "react-redux";
-import { RootState } from "./redux/store"; // <-- Adjust if needed
+import { RootState } from "./redux/store"; 
 
 function App() {
   const token = useSelector((state: RootState) => state.auth.token);

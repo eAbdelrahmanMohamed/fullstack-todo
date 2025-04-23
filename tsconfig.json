@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": "./",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@backend/*": ["backend/*"],
+      "@frontend/*": ["src/*"]
+    }
+  },
+  "include": ["backend/**/*", "src/**/*"]
+}
